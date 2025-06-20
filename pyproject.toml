@@ -1,0 +1,23 @@
+[tool.black] # Code formatter 
+line-length = 88
+target-version = ["py310"]
+exclude = '''
+/(\.venv|venv|build|dist|__pycache__)/
+'''
+
+[tool.ruff] # Linter & Auto fixer
+line-length = 88
+target-version = "py310"
+exclude = ["venv", ".venv", "build", "dist"]
+lint.select = ["E", "F", "W", "I"]
+lint.ignore = ["E501"]
+
+[tool.isort] # Sort imports 
+profile = "black"
+line_length = 88
+
+[tool.mypy] # Type Checking 
+python_version = "3.10"
+check_untyped_defs = true
+disallow_untyped_defs = false
+ignore_missing_imports = true
