@@ -1,7 +1,8 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-from backend.services.tts import generate_tts
+from backend.services import TTSVoices, generate_tts, get_valid_tts_voices
+from backend.utils.config import SERVER_ERROR_STATUS_CODE
 
 router = APIRouter()
 
@@ -24,12 +25,12 @@ class GenerateAudioRequest(BaseModel):
 
 
 @router.get("/")
-def root():
+def root() -> dict[str, str]:
     return {"message": "Welcome to the Echobook AI API"}
 
 
 @router.post("/generate-audio")
-def generate_audio(request: GenerateAudioRequest):
+def generate_audio(request: GenerateAudioRequest) -> dict[str, str]:
     """
     Generate audio from text using Resemble AI API.
 
@@ -43,4 +44,21 @@ def generate_audio(request: GenerateAudioRequest):
         )
         return {"audio_path": audio_path}
     except Exception as e:
-        raise HTTPException(status_code=500, detail={"error": str(e)})
+        raise HTTPException(
+            status_code=SERVER_ERROR_STATUS_CODE, detail={"error": str(e)}
+        )
+
+
+@router.get("/tts-voices")
+def get_tts_voices() -> dict[str, TTSVoices]:
+    """
+    Get the list of voices available for the Resemble AI API.
+    """
+
+    try:
+        voices = get_valid_tts_voices()
+        return voices
+    except Exception as e:
+        raise HTTPException(
+            status_code=SERVER_ERROR_STATUS_CODE, detail={"error": str(e)}
+        )
