@@ -13,14 +13,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from backend.api import router
 from backend.services import get_valid_tts_voices
 
-# Load environment variables from .env file
-load_dotenv()
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup logic
     print("Starting Echobook AI API...")
+
+    # Load environment variables from .env file
+    load_dotenv()
 
     # Start voice caching in background
     async def cache_voices_background():
